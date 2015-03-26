@@ -30,11 +30,11 @@
 				<input id="searchterm" class="ui-widget" type="text" name="searchterm" placeholder="Enter search term" size="35" >
 				<br />
 				Search by
-				<input type="radio" name="searchparameter" value="keyword" checked>Keyword 
-				<input type="radio" name="searchparameter" value="author">Author
+				<input type="radio" name="parameter" value="keyword" checked>Keyword 
+				<input type="radio" name="parameter" value="author">Author 
 				<br />
 				<br />
-				Limit search to <input id="searchlimit" class="ui-widget" type="number" name="searchlimit" size="4"> articles
+				Limit search to <input id="searchlimit" type="number" name="limit" placeholder="number"> articles
 				<br />
 				<div class="floatright">
 					<input id="submitbutton" class="purplebutton marginleft10" type="submit" value="Submit">

@@ -1,0 +1,119 @@
+body {
+	background-color: gray;
+	font-family: Verdana, Geneva, Arial, sans-serif; /*'Droid Sans', */
+	font-size: 14px;
+	color: white;
+	/*text-align: center;*/
+	padding-top: 10px;
+}
+
+#logo {
+	margin: auto;
+	margin-bottom: 25px;
+	text-align: center;
+	/*width: 75%; */
+}
+
+#largelogo {
+	margin: auto;
+	margin-top: 150px;
+	margin-bottom: 20px;
+	text-align: center;
+	/*width: 75%; */
+}
+
+#content {
+	margin: auto;
+	width: 60%;
+}
+
+#wordcloud {
+	width: 600px;
+}
+
+#wordcloud a {
+	text-decoration: none;
+}
+
+#inputarea {
+	margin: auto;
+	margin-top: 15px;
+	margin-bottom: 50px;
+	width: 400px;
+}
+
+#inputarea input[name="searchterm"] {
+	margin-bottom: 10px;
+	padding: 5px;
+	height: 40px;
+	width: 100%;
+	border-color: purple;
+	border-style: solid;
+}
+
+#inputarea #searchlimit {
+	width: 75px;
+}
+
+
+.purplebutton {
+	margin-top: 5px;
+	margin-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 30px;
+	background-color: purple;
+	border-style: none;
+	color: white;
+	font-weight: bolder;
+}
+
+.purplebutton:hover {
+	background-color: #6B00ED;
+}
+
+.sharebutton {
+	transform: scale(1.5);
+	-o-transform: scale(1.5);
+	-ms-transform: scale(1.5);
+	-moz-transform: scale(1.5);
+	-webkit-transform: scale(1.5);
+	vertical-align: middle;
+	margin: 0 10px 0 20px;
+}
+
+.ui-autocomplete {
+	max-height: 125px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+* html .ui-autocomplete {
+	height: 100px;
+}
+
+.marginleft10 {
+	margin-left: 10px;
+}
+
+.marginright10 {
+	margin-right: 10px;
+}
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+	/*width: 50%;*/
+}
+
+.floatleft {
+	float: left;
+}
+
+.floatright {
+	float: right;
+}
+
+.spacer {
+	height: 25px;
+}
