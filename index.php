@@ -11,7 +11,7 @@
 		<script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
 
 		<!-- AutoComplete -->
-		<script src="scripts/autocomplete.js"></script>
+		<!-- <script src="scripts/autocomplete.js"></script> -->
 
 	</head>
 	
@@ -30,11 +30,11 @@
 				<input id="searchterm" class="ui-widget" type="text" name="searchterm" placeholder="Enter search term" size="35" >
 				<br />
 				Search by
-				<input type="radio" name="parameter" value="keyword" checked>Keyword 
+				<input type="radio" name="parameter" value="keyword" checked>Keyword(s) 
 				<input type="radio" name="parameter" value="author">Author 
 				<br />
 				<br />
-				Limit search to <input id="searchlimit" type="number" name="limit" placeholder="number"> articles
+				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles
 				<br />
 				<div class="floatright">
 					<input id="submitbutton" class="purplebutton marginleft10" type="submit" value="Submit">

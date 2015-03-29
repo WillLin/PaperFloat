@@ -117,3 +117,8 @@ body {
 .spacer {
 	height: 25px;
 }
+
+#progress {
+	margin: auto;
+	width: 50%;
+}
