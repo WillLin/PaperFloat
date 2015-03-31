@@ -103,7 +103,7 @@ function parseIEEE($count)
 				$string = "Downloads/" . $i . "file.pdf";
 
 				echo $string. "<br><br>";
-				if (filesize($string) < 1)
+				if (filesize($string) <= 64886)
 				{	
 					
 					continue;
