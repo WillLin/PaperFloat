@@ -1,5 +1,5 @@
 <?php
-include 'lib/composer/parser.php';
+include 'lib/pdfparser.php';
 include 'simple_html_dom_parser.php';
 
  function createFileFromString($stringWithFile){
@@ -97,7 +97,7 @@ function getOtherLinks ($link)
 
 function parseIEEE($count)
 {		
-	
+		$allPapers = array();
 		for ($i = 0; $i < $count; $i++)
 		{
 				$string = "Downloads/" . $i . "file.pdf";
@@ -106,20 +106,24 @@ function parseIEEE($count)
 					continue;
 				}
 
-				if ($i == 6)
-				{
-					continue;
-				}
+				// if ($i == 6)
+				// {
+				// 	continue;
+				// }
 
 				else
 				{
-					$allPapers += parsePDF($string);
+					$text = parsePDF($string);
+					//echo $text . "<br><br>";
+					$allPapers[$i] = $text;
 				}
 
-				echo $string . "<br><br>";
+				//echo $string . "<br><br>";
 		}
+ 
 
-		//echo $allPapers . "<br><br>";
+return $allPapers;
+	
 
 }
 
@@ -196,14 +200,12 @@ function serachIEEEKeyWord($keyword)
 	$pdfLink = $firstPart . "x"  . $secondPart;
 
 	echo $pdfLink . "<br>";
-	$string += hack($pdfLink, $i) . "<br> <br>";
-
+	hack($pdfLink, $i) . "<br> <br>";
+	
 	
 }
 
-	parseIEEE($i);
-echo $string;
-
+	return $i;
 }
 
 
@@ -225,10 +227,9 @@ function file_get_contents_curl($url)
 }
 
 
-// hack($pdfLink);
 
-//serachIEEEKeyWord("fuzzy logic");
-
-parseIEEE(25);
+	$num = serachIEEEKeyWord("clones");
+	$arrayOfResearchPapers = array();
+	$arrayOfResearchPapers = parseIEEE($num);
 
 ?>
