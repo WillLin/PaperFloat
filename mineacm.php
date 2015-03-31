@@ -101,8 +101,11 @@ function parseIEEE($count)
 		for ($i = 0; $i < $count; $i++)
 		{
 				$string = "Downloads/" . $i . "file.pdf";
+
+				echo $string. "<br><br>";
 				if (filesize($string) < 1)
-				{
+				{	
+					
 					continue;
 				}
 
@@ -227,9 +230,13 @@ function file_get_contents_curl($url)
 }
 
 
+	$num = serachIEEEKeyWord("robot");
 
-	$num = serachIEEEKeyWord("clones");
-	$arrayOfResearchPapers = array();
 	$arrayOfResearchPapers = parseIEEE($num);
+
+	for ($i = 0; $i < 25; $i++)
+	{
+		echo $arrayOfResearchPapers[$i] . "<br><br>";
+	}
 
 ?>
