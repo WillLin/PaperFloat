@@ -95,13 +95,35 @@ function getOtherLinks ($link)
 	return $link;
 }
 
-function parseIEEE()
-{
+function parseIEEE($count)
+{		
+	
+		for ($i = 0; $i < $count; $i++)
+		{
+				$string = "Downloads/" . $i . "file.pdf";
+				if (filesize($string) < 1)
+				{
+					continue;
+				}
 
+				if ($i == 6)
+				{
+					continue;
+				}
+
+				else
+				{
+					$allPapers += parsePDF($string);
+				}
+
+				echo $string . "<br><br>";
+		}
+
+		//echo $allPapers . "<br><br>";
 
 }
 
-function hack($url)
+function hack($url, $i)
 {
 
 	$cookie = 'cookies.txt';
@@ -120,21 +142,22 @@ function hack($url)
 	//curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Encoding: none','Content-Type: application/pdf'));
 
 	//header('Content-type: application/pdf');
-	echo "<br>";
 	$result = curl_exec($ch);
 	curl_close($ch);
 
 	//$text = parsePDF($result);
 	//echo $text;
-	$file = 'file.pdf';
+
+	$file = "Downloads/" . $i . 'file.pdf';
 	file_put_contents($file, $result);
-	$text = parsePDF($file);
-	echo $text;
+	//$text = parsePDF($file);
+	//return $text;
 
 }
 
 function serachIEEEKeyWord($keyword)
 {
+
 	$keyword = strtolower($keyword);
 	$keyword = preg_replace("/[\s_]/", "_", $keyword);
 	$query = "http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?querytext=" . $keyword;
@@ -150,27 +173,40 @@ function serachIEEEKeyWord($keyword)
 	}
 	print_r($arrayOfLinks);
 
-	echo "<br>";
-	$link1 = $arrayOfLinks[1];
-	$html = file_get_html($link1);
 
-	echo "here: " . $link1 . "<br>";
-	foreach ($html -> find("div.button-set span a.html") as $e)
+	for ($i = 0; $i < count($arrayOfLinks); $i++)
 	{
-		$link = $e->href;
+		$html = file_get_contents_curl($arrayOfLinks[$i]);
+		$doc = new DOMDocument();
+		@$doc->loadHTML($html);
+		$metas = $doc->getElementsByTagName('meta');
 
-		$link = "http://ieeexplore.ieee.org" . $link;
-		echo $link;
+		for ($j = 0; $j < $metas->length; $j++)
+	{
+		$meta = $metas->item($j);
+		if ($meta->getAttribute('name') == "citation_pdf_url")
+		{
+			$pdfLink = $meta->getAttribute('content');
+			break;
+		}
 	}
 
-	$html = file_get_html($link);
+	$firstPart = substr($pdfLink, 0, 30);
+	$secondPart = substr($pdfLink, 30, strlen($pdfLink));
+	$pdfLink = $firstPart . "x"  . $secondPart;
 
-	foreach($html->find("p") as $e)
-	{
-		echo $e->plaintext . "<br><br>";
-	}
+	echo $pdfLink . "<br>";
+	$string += hack($pdfLink, $i) . "<br> <br>";
+
 	
 }
+
+	parseIEEE($i);
+echo $string;
+
+}
+
+
 
 
 function file_get_contents_curl($url)
@@ -189,33 +225,10 @@ function file_get_contents_curl($url)
 }
 
 
-
-$html = file_get_contents_curl("http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=389912&contentType=Conference+Publications");
-
-
-$doc = new DOMDocument();
-@$doc->loadHTML($html);
-$metas = $doc->getElementsByTagName('meta');
-
-for ($i = 0; $i < $metas->length; $i++)
-{
-	$meta = $metas->item($i);
-	if ($meta->getAttribute('name') == "citation_pdf_url")
-	{
-		$pdfLink = $meta->getAttribute('content');
-		break;
-	}
-}
-
-
-echo $pdfLink . "<br>"; 
-$firstPart = substr($pdfLink, 0, 30);
-$secondPart = substr($pdfLink, 30, strlen($pdfLink));
-$pdfLink = $firstPart . "x"  . $secondPart;
-echo $pdfLink;
-
-hack($pdfLink);
+// hack($pdfLink);
 
 //serachIEEEKeyWord("fuzzy logic");
+
+parseIEEE(25);
 
 ?>
