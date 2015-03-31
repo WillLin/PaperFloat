@@ -415,6 +415,7 @@ class Object
     {
         $commands = $matches = array();
 
+        set_time_limit(120);
         while ($offset < strlen($text_part)) {
             $offset += strspn($text_part, "\x00\x09\x0a\x0c\x0d\x20", $offset);
             $char = $text_part[$offset];
