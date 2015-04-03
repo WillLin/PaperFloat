@@ -5,6 +5,9 @@ include 'simple_html_dom_parser.php';
 //start session
 //session_start();
 
+$processesDone = 0;
+$_SESSION['processesDone'] = $processesDone;
+
  function createFileFromString($stringWithFile){
     header('Content-Description: File Transfer');
     header("Content-Type: application/pdf");
@@ -124,6 +127,12 @@ function parseIEEE($count)
 					$allPapers[$i] = $text;
 				}
 
+				$processesDone = $_SESSION['processesDone'];
+				$processesDone++;
+				$_SESSION['processesDone'] = $processesDone;
+
+				//echo $processesDone;
+
 				//echo $string . "<br><br>";
 		}
  
@@ -162,6 +171,13 @@ function hack($url, $i)
 	file_put_contents($file, $result);
 	//$text = parsePDF($file);
 	//return $text;
+
+
+	$processesDone = $_SESSION['processesDone'];
+	$processesDone++;
+	$_SESSION['processesDone'] = $processesDone;
+
+	//echo $processesDone;
 
 }
 

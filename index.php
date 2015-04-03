@@ -1,3 +1,5 @@
+
+
 <html>
 	<head>
 		<title>PaperFloat</title>
@@ -12,6 +14,13 @@
 
 		<!-- AutoComplete -->
 		<!-- <script src="scripts/autocomplete.js"></script> -->
+
+		<script type="text/javascript">
+			function doSomething() {
+			    $.get("progress2.php");
+			    return false;
+			}
+		</script>
 
 	</head>
 	
@@ -37,10 +46,22 @@
 				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles
 				<br />
 				<div class="floatright">
-					<input id="submitbutton" class="purplebutton marginleft10" type="submit" value="Submit">
+					<input id="submitbutton" class="purplebutton marginleft10" type="submit" value="Submit" onclick="doSomething();">
 				</div>
 			</form>
 		</div>
+
+<?php 
+
+$limit = 1;
+$_SESSION['limit'] = $limit;
+
+$done = 0;
+$_SESSION['processesDone'] = $done;
+
+
+?>
+
 
 	</body>
 	
