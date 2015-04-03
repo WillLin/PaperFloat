@@ -3,7 +3,7 @@ include 'lib/pdfparser.php';
 include 'simple_html_dom_parser.php';
 
 //start session
-session_start();
+//session_start();
 
  function createFileFromString($stringWithFile){
     header('Content-Description: File Transfer');
@@ -105,7 +105,7 @@ function parseIEEE($count)
 		{
 				$string = "Downloads/" . $i . "file.pdf";
 
-				echo $string. "<br><br>";
+				//echo $string. "<br><br>";
 				if (filesize($string) <= 64886)
 				{	
 					$allPapers[$i] = ' ';
@@ -174,14 +174,14 @@ function serachIEEEKeyWord($keyword)
 	$xml = simplexml_load_file($query);
 	//print_r($xml);
 	$count = count($xml->document);
-	echo $count . "<br>";
+	//echo $count . "<br>";
 
 	$arrayOfLinks = array();
 	for ($i = 0; $i < $count; $i++)
 	{
 		$arrayOfLinks[$i] = (string)$xml->document[$i]->mdurl;
 	}
-	print_r($arrayOfLinks);
+	//print_r($arrayOfLinks);
 
 	$limit = $_SESSION['limit'];
 	
@@ -208,7 +208,7 @@ function serachIEEEKeyWord($keyword)
 			$secondPart = substr($pdfLink, 30, strlen($pdfLink));
 			$pdfLink = $firstPart . "x"  . $secondPart;
 
-			echo $pdfLink . "<br>";
+			//echo $pdfLink . "<br>";
 			hack($pdfLink, $i) . "<br> <br>";
 	
 		}
@@ -239,20 +239,27 @@ function file_get_contents_curl($url)
 
     return $data;
 }
-	
+
+
+function startProcessor() {
+
 	$searchTerm = $_SESSION['searchTerm'];
 
 	$num = serachIEEEKeyWord($searchTerm);
 
 	$arrayOfResearchPapers = parseIEEE($num);
 
+	$_SESSION['paperArray'] = $arrayOfResearchPapers;
+
+}
 	/*
-	for ($i = 0; $i < $num; $i++)
-	{
-		echo $arrayOfResearchPapers[$i] . "<br><br>";
-	}
-	*/
+	$searchTerm = $_SESSION['searchTerm'];
+
+	$num = serachIEEEKeyWord($searchTerm);
+
+	$arrayOfResearchPapers = parseIEEE($num);
 
 	$_SESSION['paperArray'] = $arrayOfResearchPapers;
+	*/
 
 ?>

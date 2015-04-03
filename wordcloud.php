@@ -1,6 +1,18 @@
 <?php
 	//start session
 	session_start();
+	include 'processor.php';
+
+	$term = $_GET['searchterm'];
+
+	$_SESSION['searchTerm'] = $term;
+
+	$limit = $_GET['limit'];
+	$_SESSION['limit'] = $limit;
+
+
+	startProcessor();
+
 ?>
 <html>
 	<head>
@@ -33,7 +45,8 @@
 		<!-- <div id="fb-root"></div> -->
 		
 		<div id="logo">
-			<a href="./"><img src="images/lyricfloat_sm.png" alt="LyricFloat" /></a>
+			<a href="./">PaperFloat</a>
+			<!-- <a href="./"><img src="images/lyricfloat_sm.png" alt="LyricFloat" /></a> -->
 		</div>
 
 		<div class="center" id="wordcloud">
@@ -146,14 +159,19 @@
 		</div>
 
 		<div id="inputarea">
-		
-			<!-- <form action="submit.php" method="get"> -->
-			<form action="search.php" method="get"> 
+			<form action="wordcloud.php" method="get" >
 				<input id="searchterm" class="ui-widget" type="text" name="searchterm" placeholder="Enter search term" size="35" >
+				<br />
+				Search by
+				<input type="radio" name="parameter" value="keyword" checked>Keyword(s) 
+				<input type="radio" name="parameter" value="author">Author 
+				<br />
+				<br />
+				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles
 				<br />
 				<div class="floatright">
 					<!-- <div class="fb-share-button sharebutton" data-layout="button"></div> -->
-					<button id="submitbutton" class="purplebutton marginleft10" type="submit" value="Submit">Go</button>
+					<input id="submitbutton" class="purplebutton marginleft10" type="submit" value="Submit">
 				</div>
 			</form>
 		</div>

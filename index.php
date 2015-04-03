@@ -26,7 +26,7 @@
 		</div>
 
 		<div id="inputarea">
-			<form action="search.php" method="get" >
+			<form action="wordcloud.php" method="get" >
 				<input id="searchterm" class="ui-widget" type="text" name="searchterm" placeholder="Enter search term" size="35" >
 				<br />
 				Search by
