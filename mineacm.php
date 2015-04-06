@@ -2,6 +2,9 @@
 include 'lib/pdfparser.php';
 include 'simple_html_dom_parser.php';
 
+//start session
+session_start();
+
  function createFileFromString($stringWithFile){
     header('Content-Description: File Transfer');
     header("Content-Type: application/pdf");
@@ -105,8 +108,8 @@ function parseIEEE($count)
 				echo $string. "<br><br>";
 				if (filesize($string) <= 64886)
 				{	
-					
-					continue;
+					$allPapers[$i] = ' ';
+					//continue;
 				}
 
 				// if ($i == 6)
@@ -180,33 +183,41 @@ function serachIEEEKeyWord($keyword)
 	}
 	print_r($arrayOfLinks);
 
-
+	$limit = $_SESSION['limit'];
+	
 	for ($i = 0; $i < count($arrayOfLinks); $i++)
 	{
-		$html = file_get_contents_curl($arrayOfLinks[$i]);
-		$doc = new DOMDocument();
-		@$doc->loadHTML($html);
-		$metas = $doc->getElementsByTagName('meta');
+		if ($i < $limit) {
+			$html = file_get_contents_curl($arrayOfLinks[$i]);
+			$doc = new DOMDocument();
+			@$doc->loadHTML($html);
+			$metas = $doc->getElementsByTagName('meta');
 
-		for ($j = 0; $j < $metas->length; $j++)
-	{
-		$meta = $metas->item($j);
-		if ($meta->getAttribute('name') == "citation_pdf_url")
-		{
-			$pdfLink = $meta->getAttribute('content');
-			break;
+			for ($j = 0; $j < $metas->length; $j++)
+			{
+				$meta = $metas->item($j);
+				$pdfLink = ' ';
+				if ($meta->getAttribute('name') == "citation_pdf_url")
+				{
+					$pdfLink = $meta->getAttribute('content');
+					break;
+				}
+			}
+
+			$firstPart = substr($pdfLink, 0, 30);
+			$secondPart = substr($pdfLink, 30, strlen($pdfLink));
+			$pdfLink = $firstPart . "x"  . $secondPart;
+
+			echo $pdfLink . "<br>";
+			hack($pdfLink, $i) . "<br> <br>";
+	
 		}
+
 	}
 
-	$firstPart = substr($pdfLink, 0, 30);
-	$secondPart = substr($pdfLink, 30, strlen($pdfLink));
-	$pdfLink = $firstPart . "x"  . $secondPart;
-
-	echo $pdfLink . "<br>";
-	hack($pdfLink, $i) . "<br> <br>";
-	
-	
-}
+	if ($i >= $limit) {
+		$i = $limit;
+	}
 
 	return $i;
 }
@@ -228,15 +239,20 @@ function file_get_contents_curl($url)
 
     return $data;
 }
+	
+	$searchTerm = $_SESSION['searchTerm'];
 
-
-	$num = serachIEEEKeyWord("robot");
+	$num = serachIEEEKeyWord($searchTerm);
 
 	$arrayOfResearchPapers = parseIEEE($num);
 
-	for ($i = 0; $i < 25; $i++)
+	/*
+	for ($i = 0; $i < $num; $i++)
 	{
 		echo $arrayOfResearchPapers[$i] . "<br><br>";
 	}
+	*/
+
+	$_SESSION['paperArray'] = $arrayOfResearchPapers;
 
 ?>
