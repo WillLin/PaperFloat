@@ -38,6 +38,27 @@ class Paper
 	{
 		$this->text = $text;
 	}
+
+	function getTitle(){
+		return $this->title;
+	}
+
+	function getAuthors(){
+		return $this->authors;
+	}
+	function getText(){
+		return $this->text;
+	}
+	function getLink(){
+		return $this->link;
+	}
+	function getConference(){
+		return $this->conference;
+	}
+
+	function getFrequency($word){
+		return substr_count($this->text, $word);
+	}
 }
 
-	?>
+?>
