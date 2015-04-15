@@ -2,11 +2,15 @@
 include 'lib/pdfparser.php';
 include 'simple_html_dom_parser.php';
 
+require_once 'progressbar.php';
+
 //start session
 //session_start();
 
 $processesDone = 0;
 $_SESSION['processesDone'] = $processesDone;
+
+
 
  function createFileFromString($stringWithFile){
     header('Content-Description: File Transfer');
@@ -127,13 +131,15 @@ function parseIEEE($count)
 					$allPapers[$i] = $text;
 				}
 
+				$p = $_SESSION['progressbar'];
+
+				$limit = $_SESSION['limit'];
+
 				$processesDone = $_SESSION['processesDone'];
 				$processesDone++;
 				$_SESSION['processesDone'] = $processesDone;
 
-				//echo $processesDone;
-
-				//echo $string . "<br><br>";
+				$p->setProgressBarProgress(($processesDone*100)/($limit*2));
 		}
  
 
@@ -173,11 +179,16 @@ function hack($url, $i)
 	//return $text;
 
 
+	$p = $_SESSION['progressbar'];
+
+	$limit = $_SESSION['limit'];
+
 	$processesDone = $_SESSION['processesDone'];
 	$processesDone++;
 	$_SESSION['processesDone'] = $processesDone;
 
-	//echo $processesDone;
+	$p->setProgressBarProgress(($processesDone*100)/($limit*2));
+
 
 }
 
@@ -259,6 +270,18 @@ function file_get_contents_curl($url)
 
 function startProcessor() {
 
+	$p = new ProgressBar();
+	echo '<div id="progressbar" style="background-color:gray;height:90%;font-family:Verdana;color:white;padding-top: 50px;">';
+	echo '<div id="logo" style="text-align:center;margin-bottom:50px;">
+			<img src="images/paperfloat_sm.png" alt="PaperFloat" />
+		</div>';
+	echo '<p style="text-align:center;">Our monkeys are &quot;reading&quot; the papers...</p>';
+	echo '<div style="width:40%;margin:auto;">';
+	$p->render();
+	echo '</div>';
+	echo '</div>';
+	$_SESSION['progressbar'] = $p;
+
 	$searchTerm = $_SESSION['searchTerm'];
 
 	$num = serachIEEEKeyWord($searchTerm);
@@ -266,16 +289,10 @@ function startProcessor() {
 	$arrayOfResearchPapers = parseIEEE($num);
 
 	$_SESSION['paperArray'] = $arrayOfResearchPapers;
+
+	$p->setProgressBarProgress(100);
+
 
 }
-	/*
-	$searchTerm = $_SESSION['searchTerm'];
-
-	$num = serachIEEEKeyWord($searchTerm);
-
-	$arrayOfResearchPapers = parseIEEE($num);
-
-	$_SESSION['paperArray'] = $arrayOfResearchPapers;
-	*/
 
 ?>

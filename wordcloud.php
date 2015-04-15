@@ -45,8 +45,7 @@
 		<!-- <div id="fb-root"></div> -->
 		
 		<div id="logo">
-			<a href="./">PaperFloat</a>
-			<!-- <a href="./"><img src="images/lyricfloat_sm.png" alt="LyricFloat" /></a> -->
+			<a href="./"><img src="images/paperfloat_sm.png" alt="PaperFloat" /></a>
 		</div>
 
 		<div class="center" id="wordcloud">
@@ -175,6 +174,10 @@
 				</div>
 			</form>
 		</div>
+
+		<script>
+			$( "#progressbar" ).hide();
+		</script>
 
 	</body>
 	

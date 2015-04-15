@@ -15,12 +15,7 @@
 		<!-- AutoComplete -->
 		<!-- <script src="scripts/autocomplete.js"></script> -->
 
-		<script type="text/javascript">
-			function doSomething() {
-			    $.get("progress2.php");
-			    return false;
-			}
-		</script>
+		
 
 	</head>
 	
@@ -53,8 +48,8 @@
 
 <?php 
 
-$limit = 1;
-$_SESSION['limit'] = $limit;
+//$limit = 1;
+//$_SESSION['limit'] = $limit;
 
 $done = 0;
 $_SESSION['processesDone'] = $done;
