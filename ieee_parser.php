@@ -1,9 +1,11 @@
 <?php
+
 include 'lib/pdfparser.php';
 include 'simple_html_dom_parser.php';
-
+include 'paper.php';
 //start session
 session_start();
+
 
  function createFileFromString($stringWithFile){
     header('Content-Description: File Transfer');
@@ -98,10 +100,10 @@ function getOtherLinks ($link)
 	return $link;
 }
 
-function parseIEEE($count)
+function parseIEEE($papers)
 {		
-		$allPapers = array();
-		for ($i = 0; $i < $count; $i++)
+		
+		for ($i = 0; $i < count($papers); $i++)
 		{
 				$string = "Downloads/" . $i . "file.pdf";
 
@@ -122,13 +124,14 @@ function parseIEEE($count)
 					$text = parsePDF($string);
 					//echo $text . "<br><br>";
 					$allPapers[$i] = $text;
+					$papers[$i]->setText($text);
 				}
 
 				//echo $string . "<br><br>";
 		}
  
 
-return $allPapers;
+return $papers;
 	
 
 }
@@ -155,7 +158,7 @@ function hack($url, $i)
 	$result = curl_exec($ch);
 	curl_close($ch);
 
-	//$text = parsePDF($result);
+	//$text = parsePDF($result);	
 	//echo $text;
 
 	$file = "Downloads/" . $i . 'file.pdf';
@@ -165,6 +168,79 @@ function hack($url, $i)
 
 }
 
+function searchIEEEauthor($author)
+{
+	$author = strtolower($author);
+	$author = preg_replace("/[\s_]/", "_", $author);
+	$query = "http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?au=" . $author;
+	$xml = simplexml_load_file($query);
+	$count = count($xml->document);
+	$arrayOfLinks = array();
+	for ($i = 0; $i < $count; $i++)
+	{
+		$arrayOfLinks[$i] = (string)$xml->document[$i]->mdurl;
+	}
+	print_r($arrayOfLinks);
+$limit = $_SESSION['limit'];
+	
+	$paperArray = array();
+	for ($i = 0; $i < 5; $i++)
+	{
+		
+			$html = file_get_contents_curl($arrayOfLinks[$i]);
+			$doc = new DOMDocument();
+			@$doc->loadHTML($html);
+			$metas = $doc->getElementsByTagName('meta');
+			$paper = new Paper();
+			for ($j = 0; $j < $metas->length; $j++)
+			{
+				$meta = $metas->item($j);
+				$pdfLink = ' ';
+				
+
+				if ($meta->getAttribute('name') == "citation_conference")
+				{
+					$paper->setConference($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_author")
+				{
+					$paper->setAuthor($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_title")
+				{
+					$paper->setTitle($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_pdf_url")
+				{	
+					
+					$pdfLink = $meta->getAttribute('content');
+					break;
+				}
+
+			}
+			
+
+			$firstPart = substr($pdfLink, 0, 30);
+
+			$secondPart = substr($pdfLink, 30, strlen($pdfLink));
+			$pdfLink = $firstPart . "x"  . $secondPart;
+
+			$paper->setLink($pdfLink);
+			//echo "hey" . $pdfLink . "<br>";
+			hack($pdfLink, $i) . "<br> <br>";
+
+			$paperArray[] = $paper;
+			
+		}
+
+		return $paperArray;
+
+}
+
+
 function serachIEEEKeyWord($keyword)
 {
 
@@ -172,58 +248,70 @@ function serachIEEEKeyWord($keyword)
 	$keyword = preg_replace("/[\s_]/", "_", $keyword);
 	$query = "http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?querytext=" . $keyword;
 	$xml = simplexml_load_file($query);
-	//print_r($xml);
 	$count = count($xml->document);
-	echo $count . "<br>";
-
 	$arrayOfLinks = array();
 	for ($i = 0; $i < $count; $i++)
 	{
 		$arrayOfLinks[$i] = (string)$xml->document[$i]->mdurl;
 	}
 	print_r($arrayOfLinks);
-
-	$limit = $_SESSION['limit'];
+$limit = $_SESSION['limit'];
 	
-	for ($i = 0; $i < count($arrayOfLinks); $i++)
+	$paperArray = array();
+	for ($i = 0; $i < 5; $i++)
 	{
-		if ($i < $limit) {
+		
 			$html = file_get_contents_curl($arrayOfLinks[$i]);
 			$doc = new DOMDocument();
 			@$doc->loadHTML($html);
 			$metas = $doc->getElementsByTagName('meta');
-
+			$paper = new Paper();
 			for ($j = 0; $j < $metas->length; $j++)
 			{
 				$meta = $metas->item($j);
 				$pdfLink = ' ';
-				if ($meta->getAttribute('name') == "citation_pdf_url")
+				
+
+				if ($meta->getAttribute('name') == "citation_conference")
 				{
+					$paper->setConference($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_author")
+				{
+					$paper->setAuthor($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_title")
+				{
+					$paper->setTitle($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_pdf_url")
+				{	
+					
 					$pdfLink = $meta->getAttribute('content');
 					break;
 				}
+
 			}
+			
 
 			$firstPart = substr($pdfLink, 0, 30);
+
 			$secondPart = substr($pdfLink, 30, strlen($pdfLink));
 			$pdfLink = $firstPart . "x"  . $secondPart;
 
-			echo $pdfLink . "<br>";
+			$paper->setLink($pdfLink);
+			//echo "hey" . $pdfLink . "<br>";
 			hack($pdfLink, $i) . "<br> <br>";
-	
+
+			$paperArray[] = $paper;
+			
 		}
 
-	}
-
-	if ($i >= $limit) {
-		$i = $limit;
-	}
-
-	return $i;
+		return $paperArray;
 }
-
-
-
 
 function file_get_contents_curl($url)
 {
@@ -239,20 +327,12 @@ function file_get_contents_curl($url)
 
     return $data;
 }
-	
-	$searchTerm = $_SESSION['searchTerm'];
 
-	$num = serachIEEEKeyWord($searchTerm);
+$papers = searchIEEEauthor("dijkstra");
 
-	$arrayOfResearchPapers = parseIEEE($num);
+$paperArray = parseIEEE($papers);
 
-	/*
-	for ($i = 0; $i < $num; $i++)
-	{
-		echo $arrayOfResearchPapers[$i] . "<br><br>";
-	}
-	*/
-
-	$_SESSION['paperArray'] = $arrayOfResearchPapers;
+var_dump($paperArray);
 
 ?>
+	
