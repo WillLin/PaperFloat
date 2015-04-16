@@ -7,10 +7,12 @@ class Word
 	public $authors;
 	public $conference;
 	public $link;
+	public $frequency;
 
 	function __construct()
 	{
 		$this->authors = array();
+		
 	}
 
 	function setWord($word)
@@ -43,6 +45,10 @@ class Word
 		$this->link = $link;
 	}
 
+	function setFrequency($frequency)
+	{
+		$this->frequency = $frequency;
+	}
 
 	function getTitle(){
 		return $this->title;
