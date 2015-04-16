@@ -11,7 +11,6 @@ class Word
 	function __construct()
 	{
 		$this->authors = array();
-		
 	}
 
 	function setWord($word)
