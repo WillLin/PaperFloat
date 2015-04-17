@@ -77,13 +77,6 @@
 	}
 	/**
 	*@depends test_constructor
-	*@depends test_getContent
-	**/
-	function test_render(ProgressBar $progressbar, $result){
-	}
-
-	/**
-	*@depends test_constructor
 	**/
 	function test_setProgressBarProgress(ProgressBar $progressbar)
 	{
