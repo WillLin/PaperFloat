@@ -38,25 +38,13 @@
 				<input type="radio" name="parameter" value="author">Author 
 				<br />
 				<br />
-				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles
+				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles per source
 				<br />
 				<div class="floatright">
 					<input id="submitbutton" class="purplebutton marginleft10" type="submit" value="Submit" onclick="doSomething();">
 				</div>
 			</form>
 		</div>
-
-<?php 
-
-//$limit = 1;
-//$_SESSION['limit'] = $limit;
-
-$done = 0;
-$_SESSION['processesDone'] = $done;
-
-
-?>
-
 
 	</body>
 	

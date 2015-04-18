@@ -1,6 +1,7 @@
 <?php
 include 'lib/pdfparser.php';
 include 'simple_html_dom_parser.php';
+include 'paper.php';
 
 require_once 'progressbar.php';
 
@@ -105,6 +106,52 @@ function getOtherLinks ($link)
 	return $link;
 }
 
+
+/* IEEE Functions */
+
+
+function parseIEEE($papers)
+{			
+	for ($i = 0; $i < count($papers); $i++)
+	{
+		$string = "Downloads/" . $i . "file.pdf";
+
+		$arrayOfPaperText = array();
+		if (filesize($string) <= 64886)
+		{	
+			$arrayOfPaperText[$i] = ' ';
+			//continue;
+		}
+
+		else
+		{
+			$text = parsePDF($string);
+			$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
+			$arrayOfPaperText[$i] = $text;
+			$papers[$i]->setText($text);
+		}
+
+		// update progress bar
+		$p = $_SESSION['progressbar'];
+
+		$totalProcesses = $_SESSION['totalProcesses'];
+
+		$processesDone = $_SESSION['processesDone'];
+		$processesDone++;
+		$_SESSION['processesDone'] = $processesDone;
+
+		$p->setProgressBarProgress(($processesDone*100)/$totalProcesses);
+	}
+
+	// push paper array to session
+	$_SESSION['IEEEPaperArray'] = $papers;
+ 
+	return $arrayOfPaperText;
+	
+}
+
+
+/*
 function parseIEEE($count)
 {		
 		$allPapers = array();
@@ -131,15 +178,16 @@ function parseIEEE($count)
 					$allPapers[$i] = $text;
 				}
 
+				// update progress bar
 				$p = $_SESSION['progressbar'];
 
-				$limit = $_SESSION['limit'];
+				$totalProcesses = $_SESSION['totalProcesses'];
 
 				$processesDone = $_SESSION['processesDone'];
 				$processesDone++;
 				$_SESSION['processesDone'] = $processesDone;
 
-				$p->setProgressBarProgress(($processesDone*100)/($limit*2));
+				$p->setProgressBarProgress(($processesDone*100)/$totalProcesses);
 		}
  
 
@@ -148,10 +196,12 @@ return $allPapers;
 
 }
 
-function hack($url, $i)
+*/
+
+function getFileIEEE($url, $i)
 {
 
-	$cookie = 'cookies.txt';
+	$cookie = 'cookiesIEEE.txt';
 	$timeout = 30;
 
 	//$url = "http://ieeexplore.ieee.org/ielx7/6597024/6623991/06624021.pdf";
@@ -179,20 +229,93 @@ function hack($url, $i)
 	//return $text;
 
 
+	// update progress bar
 	$p = $_SESSION['progressbar'];
 
-	$limit = $_SESSION['limit'];
+	$totalProcesses = $_SESSION['totalProcesses'];
 
 	$processesDone = $_SESSION['processesDone'];
 	$processesDone++;
 	$_SESSION['processesDone'] = $processesDone;
 
-	$p->setProgressBarProgress(($processesDone*100)/($limit*2));
+	$p->setProgressBarProgress(($processesDone*100)/$totalProcesses);
 
 
 }
 
-function serachIEEEKeyWord($keyword)
+
+function searchIEEEKeyWord($keyword)
+{
+
+	$keyword = strtolower($keyword);
+	$keyword = preg_replace("/[\s_]/", "_", $keyword);
+	$query = "http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?querytext=" . $keyword;
+	$xml = simplexml_load_file($query);
+	$count = count($xml->document);
+	$arrayOfLinks = array();
+	for ($i = 0; $i < $count; $i++)
+	{
+		$arrayOfLinks[$i] = (string)$xml->document[$i]->mdurl;
+	}
+	//print_r($arrayOfLinks);
+	$limit = $_SESSION['limit'];
+	
+	$paperArray = array();
+	for ($i = 0; $i < 5; $i++)
+	{
+		
+		$html = file_get_contents_curl($arrayOfLinks[$i]);
+		$doc = new DOMDocument();
+		@$doc->loadHTML($html);
+		$metas = $doc->getElementsByTagName('meta');
+		$paper = new Paper();
+		for ($j = 0; $j < $metas->length; $j++)
+		{
+			$meta = $metas->item($j);
+			$pdfLink = ' ';
+			
+
+			if ($meta->getAttribute('name') == "citation_conference")
+			{
+				$paper->setConference($meta->getAttribute('content'));
+			}
+
+			if ($meta->getAttribute('name') == "citation_author")
+			{
+				$paper->setAuthor($meta->getAttribute('content'));
+			}
+
+			if ($meta->getAttribute('name') == "citation_title")
+			{
+				$paper->setTitle($meta->getAttribute('content'));
+			}
+
+			if ($meta->getAttribute('name') == "citation_pdf_url")
+			{	
+				$pdfLink = $meta->getAttribute('content');
+				break;
+			}
+		}
+		
+
+		$firstPart = substr($pdfLink, 0, 30);
+
+		$secondPart = substr($pdfLink, 30, strlen($pdfLink));
+		$pdfLink = $firstPart . "x"  . $secondPart;
+
+		$paper->setLink($pdfLink);
+
+		getFileIEEE($pdfLink, $i);
+
+		$paperArray[] = $paper;
+		
+	}
+
+	return $paperArray;
+}
+
+/*
+function searchIEEEKeyWord($keyword)
 {
 
 	$keyword = strtolower($keyword);
@@ -236,7 +359,7 @@ function serachIEEEKeyWord($keyword)
 			$pdfLink = $firstPart . "x"  . $secondPart;
 
 			//echo $pdfLink . "<br>";
-			hack($pdfLink, $i) . "<br> <br>";
+			getFileIEEE($pdfLink, $i) . "<br> <br>";
 	
 		}
 
@@ -248,9 +371,77 @@ function serachIEEEKeyWord($keyword)
 
 	return $i;
 }
+*/
 
+function searchIEEEAuthor($author)
+{
+	$author = strtolower($author);
+	$author = preg_replace("/[\s_]/", "_", $author);
+	$query = "http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?au=" . $author;
+	$xml = simplexml_load_file($query);
+	$count = count($xml->document);
+	$arrayOfLinks = array();
+	for ($i = 0; $i < $count; $i++)
+	{
+		$arrayOfLinks[$i] = (string)$xml->document[$i]->mdurl;
+	}
+	//print_r($arrayOfLinks);
+	$limit = $_SESSION['limit'];
+	
+	$paperArray = array();
+	for ($i = 0; $i < 5; $i++)
+	{
+		
+		$html = file_get_contents_curl($arrayOfLinks[$i]);
+		$doc = new DOMDocument();
+		@$doc->loadHTML($html);
+		$metas = $doc->getElementsByTagName('meta');
+		$paper = new Paper();
+		for ($j = 0; $j < $metas->length; $j++)
+		{
+			$meta = $metas->item($j);
+			$pdfLink = ' ';
+			
 
+			if ($meta->getAttribute('name') == "citation_conference")
+			{
+				$paper->setConference($meta->getAttribute('content'));
+			}
 
+			if ($meta->getAttribute('name') == "citation_author")
+			{
+				$paper->setAuthor($meta->getAttribute('content'));
+			}
+
+			if ($meta->getAttribute('name') == "citation_title")
+			{
+				$paper->setTitle($meta->getAttribute('content'));
+			}
+
+			if ($meta->getAttribute('name') == "citation_pdf_url")
+			{		
+				$pdfLink = $meta->getAttribute('content');
+				break;
+			}
+		}
+		
+
+		$firstPart = substr($pdfLink, 0, 30);
+
+		$secondPart = substr($pdfLink, 30, strlen($pdfLink));
+		$pdfLink = $firstPart . "x"  . $secondPart;
+
+		$paper->setLink($pdfLink);
+
+		getFileIEEE($pdfLink, $i);
+
+		$paperArray[] = $paper;
+		
+	}
+
+	return $paperArray;
+
+}
 
 function file_get_contents_curl($url)
 {
@@ -267,28 +458,203 @@ function file_get_contents_curl($url)
     return $data;
 }
 
+/* End IEEE Functions */
+
+/* ACM Functions */
+function getFileACM($url, $i)
+{
+
+	$cookie = 'cookiesACM.txt';
+	$timeout = 30;
+
+	//$url = "http://ieeexplore.ieee.org/ielx7/6597024/6623991/06624021.pdf";
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout );
+	curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+	curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
+	//curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Encoding: none','Content-Type: application/pdf'));
+
+	//header('Content-type: application/pdf');
+	$result = curl_exec($ch);
+	curl_close($ch);
+
+	//$text = parsePDF($result);	
+	//echo $text;
+
+	$file = "Downloads1/" . $i . 'file.pdf';
+	file_put_contents($file, $result);
+	//$text = parsePDF($file);
+	//return $text;
+
+	// update progress bar
+	$p = $_SESSION['progressbar'];
+
+	$totalProcesses = $_SESSION['totalProcesses'];
+
+	$processesDone = $_SESSION['processesDone'];
+	$processesDone++;
+	$_SESSION['processesDone'] = $processesDone;
+
+	$p->setProgressBarProgress(($processesDone*100)/$totalProcesses);
+
+}
+
+function getACMBy($author)
+{
+	$author = strtolower($author);
+	$auhtor = preg_replace("/[\s_]/", "_", $author);
+	$query = "http://dl.acm.org/results.cfm?h=&query=" . $author;
+	$html = file_get_html($query);
+
+	$localauthors = array();
+	$titles = array();
+	$conferences = array();
+	$links = array();
+	$texts = array();
+	$paperArray = array();
+
+	$limit = $_SESSION['limit'];
+	$papersAdded = 0;
+
+	// authors
+	foreach ($html->find('tr td div.authors') as $e)
+	{	
+
+		$localauthor = trim($e->plaintext);
+		$localauthors[] = $localauthor;
+	}
+
+	foreach ($html->find('tr td a.medium-text') as $e)
+	{
+		$titles[] = $e->plaintext;
+	}
+
+	$i = 0;
+	
+	foreach($html->find('tr td tr td tr td a') as $e)
+	{	
+		$comparable = $e->plaintext;
+		$comparable = substr($comparable, 81, 84);
+
+		if ($comparable == "PDF" && $i < $limit)
+		{	
+			$link = "http://dl.acm.org/" . $e->href;
+			$links[$i] = $link;
+			getFileACM($link, $i);
+			$i++;
+		}
+
+		
+		
+	}
+
+	foreach($html->find('tr td div.addinfo') as $e)
+	{
+		$conferences[] = $e->plaintext;
+	}
+
+	for ($i = 0; $i < count($localauthors); $i++)
+	{		
+
+		if (!empty($links[$i]))
+		{
+			$paper = new Paper();
+			$paper->setAuthor($localauthors[$i]);
+			$paper->setTitle($titles[$i]);
+			$paper->setConference($conferences[$i]);
+			$paper->setLink($links[$i]);
+			$paperArray[] = $paper;
+		}
+	}
+
+return $paperArray;
+
+}
+
+function parseACM($paperArray)
+{
+	$arrayOfPaperText = array();
+	for ($i = 0; $i < count($paperArray); $i++)
+	{
+		$string = "Downloads1/" . $i . "file.pdf";
+		if (filesize($string) <= 64886)
+		{
+			unset($paperArray[$i]);
+		}
+
+		else
+		{
+			$text = parsePDF($string);
+			$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
+			$paperArray[$i]->setText($text);
+			$arrayOfPaperText[$i] = $text;
+		}
+
+
+		// update progress bar
+		$p = $_SESSION['progressbar'];
+
+		$totalProcesses = $_SESSION['totalProcesses'];
+
+		$processesDone = $_SESSION['processesDone'];
+		$processesDone++;
+		$_SESSION['processesDone'] = $processesDone;
+
+		$p->setProgressBarProgress(($processesDone*100)/$totalProcesses);
+		
+	}
+
+	// push paperarray to session
+	$_SESSION['ACMPaperArray'] = $paperArray;
+
+	return $arrayOfPaperText;
+
+}
+
+
+/* End of ACM Functions */
+
 
 function startProcessor() {
 
+	// setup and display progress bar
 	$p = new ProgressBar();
-	echo '<div id="progressbar" style="background-color:gray;height:90%;font-family:Verdana;color:white;padding-top: 50px;">';
-	echo '<div id="logo" style="text-align:center;margin-bottom:50px;">
-			<img src="images/paperfloat_sm.png" alt="PaperFloat" />
-		</div>';
+	//echo '<div id="progressbar" style="background-color:gray;height:90%;font-family:Verdana;color:white;padding-top: 50px;">';
+	//echo '<div id="logo" style="text-align:center;margin-bottom:50px;">
+	//		<img src="images/paperfloat_sm.png" alt="PaperFloat" />
+	//	</div>';
 	echo '<p style="text-align:center;">Our monkeys are &quot;reading&quot; the papers...</p>';
 	echo '<div style="width:40%;margin:auto;">';
 	$p->render();
 	echo '</div>';
-	echo '</div>';
+	//echo '</div>';
 	$_SESSION['progressbar'] = $p;
+
+
 
 	$searchTerm = $_SESSION['searchTerm'];
 
-	$num = serachIEEEKeyWord($searchTerm);
+	if ($_SESSION['searchParameter'] == 'author'){
+		$IEEEPaperArray = searchIEEEAuthor($searchTerm);
+	}
+	else {
+		$IEEEPaperArray = searchIEEEKeyWord($searchTerm);
+	}
 
-	$arrayOfResearchPapers = parseIEEE($num);
+	$arrayOfIEEEResearchPapers = parseIEEE($IEEEPaperArray);
 
-	$_SESSION['paperArray'] = $arrayOfResearchPapers;
+	$ACMPaperArray = getACMBy($searchTerm);
+	$arrayOfACMResearchPapers = parseACM($ACMPaperArray);
+
+	$arrayOfAllResearchPapers = array();
+	$arrayOfAllResearchPapers = array_merge($arrayOfIEEEResearchPapers, $arrayOfACMResearchPapers);
+
+	$_SESSION['paperArray'] = $arrayOfAllResearchPapers;
 
 	$p->setProgressBarProgress(100);
 
