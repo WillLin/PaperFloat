@@ -5,6 +5,6 @@ Feature: Get a word cloud for a key word
 
 Scenario: Enter a valid key word
 	Given the PaperFloat home page has loaded
-	And I have entered a valid key word, Turing, in the input box
+	And I have entered a valid key word, clone, in the input box
 	When I press the 'Submit' button
-	Then I should get a word cloud, with the word back
+	Then I should get a word cloud, with the word clone

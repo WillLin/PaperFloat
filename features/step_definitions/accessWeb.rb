@@ -9,7 +9,7 @@ Given(/^I have access to a web browser with internet$/) do
 end
 
 When(/^I enter PaperFloat\/index\.php$/) do
-    @browser.goto "http://localhost:8888/PaperFloat/index.php"
+    @browser.goto "http://localhost/PaperFloat/index.php"
 end
 
 Then(/^I should see the PaperFloat homepage$/) do
