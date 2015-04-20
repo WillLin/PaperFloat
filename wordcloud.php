@@ -236,8 +236,30 @@
 				$filtered = filter_stopwords_simple($wordsArray, $stopwords);
 
 
-				$_SESSION['filtered_list_complete'] = $filtered_complete;
+
+				
 				echo word_cloud($filtered, 600);
+
+				$counted = array_count_values($filtered);
+				
+				
+
+				for ($i = 0; $i < count($filtered_complete); $i++)
+				{
+					foreach($counted as $key=>$value)
+					{	
+							if(strcmp($filtered_complete[$i]->word,$key) == 0)
+							{
+								$filtered_complete[$i]->setFrequency($value);
+							}
+					}
+				}
+
+				
+
+				
+				$_SESSION['filtered_list_complete'] = $filtered_complete;
+				
 
 			?>
 		 </div>
