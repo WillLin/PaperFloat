@@ -17,8 +17,8 @@ class testpaper_word extends PHPUnit_Framework_TestCase
 	**/
 	function test_setWord(Word $word){
 		$word->setWord("test");
-		$this->assertEquals("test",$word->getWrod());
-		return $word
+		$this->assertEquals("test",$word->getWord());
+		return $word;
 	}
 	/**
 	*@depends test_setWord
@@ -41,8 +41,8 @@ class testpaper_word extends PHPUnit_Framework_TestCase
 	*@depends test_setTitle
 	**/
 	function test_setAuthor(Word $word){
-		$authors=new array("Author1","Author2");
-		$word->setAuthor($authors);
+		$authors=array("Author1","Author2");
+		$word->copyAuthors($authors);
 		$this->assertEquals($authors,$word->getAuthors());
 		return $word;
 	}
@@ -58,7 +58,7 @@ class testpaper_word extends PHPUnit_Framework_TestCase
 	*@depends test_setConference
 	**/
 	function test_setLink(Word $word){
-		$word->setTitle("www.link.com");
+		$word->setLink("www.link.com");
 		$this->assertEquals("www.link.com",$word->getLink());
 	}
 	
