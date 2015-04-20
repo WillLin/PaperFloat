@@ -243,7 +243,7 @@
 				$counted = array_count_values($filtered);
 				
 				
-				var_dump($filtered_complete);
+				//var_dump($filtered_complete);
 				// for ($i = 0; $i < count($filtered_complete); $i++)
 				// {
 				// 	foreach($counted as $key=>$value)
