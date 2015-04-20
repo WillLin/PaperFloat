@@ -171,7 +171,7 @@
 							}
 							if ($font_size >= $fmin) {
 								if ($i < 250) {
-									$cloud .= "<a href=\"word.php?word=$word\" style=\"font-size: {$font_size}px; color: $color;\">$word</a> ";
+									$cloud .= "<a href=\"keyword.php?word=$word\" style=\"font-size: {$font_size}px; color: $color;\">$word</a> ";
 									$i++;
 								}
 							}
@@ -243,7 +243,7 @@
 				$counted = array_count_values($filtered);
 				
 				
-
+				/*
 				for ($i = 0; $i < count($filtered_complete); $i++)
 				{
 					foreach($counted as $key=>$value)
@@ -255,12 +255,12 @@
 					}
 				}
 
-				
+				*/
 
 				
 				$_SESSION['filtered_list_complete'] = $filtered_complete;
 				
-
+		
 			?>
 		 </div>
 
