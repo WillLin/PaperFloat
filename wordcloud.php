@@ -171,7 +171,7 @@
 							}
 							if ($font_size >= $fmin) {
 								if ($i < 250) {
-									$cloud .= "<a href=\"word.php?word=$word\" style=\"font-size: {$font_size}px; color: $color;\">$word</a> ";
+									$cloud .= "<a href=\"keyword.php?word=$word\" style=\"font-size: {$font_size}px; color: $color;\">$word</a> ";
 									$i++;
 								}
 							}

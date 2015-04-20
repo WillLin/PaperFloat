@@ -67,8 +67,8 @@ class Word
 		return $this->conference;
 	}
 
-	function getFrequency($word){
-		return substr_count($this->text, $word);
+	function getFrequency(){
+		return $this->frequency;
 	}
 
 	function getWord() {

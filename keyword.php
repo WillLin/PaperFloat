@@ -3,6 +3,8 @@
 include('paper.php');
 include 'paper_word.php';
 session_start();
+
+/*
 function countFreq($word)
 {
 
@@ -34,7 +36,7 @@ function countFreq($word)
 	}
 }
 
-
+*/
 
 function printTable() {
 
@@ -46,8 +48,8 @@ function printTable() {
 	//var_dump($allPapers);
 
 
-	$alreadyAdded = array();
-	$alreadyAddedCount = 0;
+	//$alreadyAdded = array();
+	//$alreadyAddedCount = 0;
 
 	/*
 	foreach ($allPapers as $paper => $what) {
@@ -72,6 +74,17 @@ function printTable() {
 	}
 	*/
 
+	function cmp($a, $b) {
+		if ($a->getFrequency() == $b->getFrequency()) {
+	        return 0;
+	    }
+	    return ($a->getFrequency() > $b->getFrequency()) ? -1 : 1;
+	}
+
+
+
+	//$allPapers = array_unique($allPapers, SORT_REGULAR);
+	uasort($allPapers, 'cmp');
 	$allPapers = array_unique($allPapers, SORT_REGULAR);
 
 	foreach ($allPapers as $key => $paper) {
