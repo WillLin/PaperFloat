@@ -169,13 +169,13 @@
 
 				$stopwords = explode(',', $stopwords);
 				
-				$paperArray = array();
-				$paperArray = $_SESSION['paperArray'];
+				$textArray = array();
+				$textArray = $_SESSION['textArray'];
 
 				$wordsArray = array();
 
 				
-				foreach ($paperArray as $element) {	
+				foreach ($textArray as $element) {	
 					$exploded = multiexplode(array(' ', '-', '.', '[', ']', '(', ')'), $element);
 					$wordsArray = array_merge($wordsArray, $exploded);
 				}

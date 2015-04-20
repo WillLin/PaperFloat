@@ -651,10 +651,16 @@ function startProcessor() {
 	$ACMPaperArray = getACMBy($searchTerm);
 	$arrayOfACMResearchPapers = parseACM($ACMPaperArray);
 
-	$arrayOfAllResearchPapers = array();
-	$arrayOfAllResearchPapers = array_merge($arrayOfIEEEResearchPapers, $arrayOfACMResearchPapers);
+	$arrayOfAllText = array();
+	$arrayOfAllText = array_merge($arrayOfIEEEResearchPapers, $arrayOfACMResearchPapers);
 
-	$_SESSION['paperArray'] = $arrayOfAllResearchPapers;
+	$_SESSION['textArray'] = $arrayOfAllText;
+
+	// merge the arrays of papers from IEEE and ACM
+	$ACMPaperArray = $_SESSION['ACMPaperArray'];
+	$IEEEPaperArray = $_SESSION['IEEEPaperArray'];
+	$AllPaperArray = array_merge($ACMPaperArray, $IEEEPaperArray);
+	$_SESSION['AllPaperArray'] = $AllPaperArray;
 
 	$p->setProgressBarProgress(100);
 
