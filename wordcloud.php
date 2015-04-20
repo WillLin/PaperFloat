@@ -1,7 +1,7 @@
 <?php
 	// includes
 	include 'processor.php';
-
+	include 'paper_word.php';
 	//start session
 	session_start();
 
@@ -102,6 +102,16 @@
 
 				function filter_stopwords($words, $stopwords) {
 					for($i = 0; $i < count($words); $i++) {
+						if (!in_array(strtolower($words[$i]->word), $stopwords, TRUE)) {
+							$filtered_words [] = $words[$i];
+						}
+					}
+					return $filtered_words;
+				}
+
+					function filter_stopwords_simple($words, $stopwords)
+					{
+						for($i = 0; $i < count($words); $i++) {
 						if (!in_array(strtolower($words[$i]), $stopwords, TRUE)) {
 							$filtered_words [] = $words[$i];
 						}
@@ -109,6 +119,7 @@
 
 					return $filtered_words;
 				}
+
 				function word_freq($words) {
 					$frequency_list = array();
 					foreach ($words as $pos => $word) {
@@ -176,17 +187,58 @@
 
 				$wordsArray = array();
 
-				
-				foreach ($textArray as $element) {	
-					$exploded = multiexplode(array(' ', '-', '.', '[', ']', '(', ')'), $element);
+				$paperArray = $_SESSION['AllPaperArray'];
+
+				$arrayOfWords = array();
+				for ($i = 0; $i < count($paperArray); $i++)
+				{	
+					$arrayLocal = array();
+					if (!empty($paperArray[$i]->text))
+					{
+						$exploded = multiexplode(array(' ', '-', '.', '[', ']', '(', ')'), $paperArray[$i]->text);
+
+						for ($j = 0; $j < count($exploded); $j++)
+						{
+							$word = new Word();
+							// sets title for a word
+							if (!empty($paperArray[$i]->title))
+							{
+								$word->setTitle($paperArray[$i]->title);
+							}
+							// sets actual word
+							$word->setWord($exploded[$j]);
+							// copy authors array from paper to a word
+							if (!empty($paperArray[$i]->authors))
+							{
+								$word->copyAuthors($paperArray[$i]->authors);
+							}
+							// set conference for the word
+							if (!empty($paperArray[$i]->conference))
+							{
+								$word->setConference($paperArray[$i]->conference);
+							}
+
+							if (!empty($paperArray[$i]->link))
+							{
+								$word->setLink($paperArray[$i]->link);
+							}
+							$arrayLocal[] = $word;
+						}
+
+					}
 					$wordsArray = array_merge($wordsArray, $exploded);
+					$arrayOfWords = array_merge($arrayOfWords, $arrayLocal);
 				}
+
 				
 
-				$filtered = filter_stopwords($wordsArray, $stopwords);
-				
+				$filtered_complete = filter_stopwords($arrayOfWords, $stopwords);
+				$filtered = filter_stopwords_simple($wordsArray, $stopwords);
 
+
+				$_SESSION['filtered_list_complete'] = $filtered_complete;
 				echo word_cloud($filtered, 600);
+
 			?>
 		 </div>
 
