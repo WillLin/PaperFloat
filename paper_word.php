@@ -70,6 +70,10 @@ class Word
 	function getFrequency($word){
 		return substr_count($this->text, $word);
 	}
+
+	function getWord() {
+		return $this->word;
+	}
 }
 
 ?>

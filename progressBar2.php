@@ -1,126 +1,118 @@
-yoooooooo
-a
-a
-a
-a
-a
-a
-a
+assss 
 
 a
-a
-a
-a
-a
-aa
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-aa
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-aa
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-
-a
-aa
-
-f
-
-f
-f
-f
-fa
-af
-g
-g
-a
-s
+sa
+as
 da
+sf
+dsf
+sdf
+ds
+f
+sdf
+
 sd
-a
+f
+
+s
+df
+s
+df
 sd
+f
+asdf
 as
-d
-asd
-a
-d
+df
 
-asd
+asdf
+s
+df
 
-ad
+dsf
 
-asd
-a
-sd
-a
-sd
-a
-sd
-asd
-a
+ga
 sd
 
 asd
+f
+sdf
+
+asd
+f
+sd
+F
+
+AS
+DF
+
+sd
+f
+
+asd
+f
+
+
+sdaf
+
+
+asd
+f
 
 as
-d
-asd
-asnkdmas
- d
- asd
+df
 
- asd
- a
- sd
- as
- d
- as
- d
- asd
- a
- sd
- a
- sd
- 
+sdf
+as
+df
+
+as
+df
+
+asdf
+as
+df
+
+asd
+f
+sd
+f
+asd
+f
+sdv
+
+f
+vas
+dv
+
+as
+dv
+
+as
+dv
+
+asd
+v
+
+as
+v
+sa
+dv
+sd
+v
+sdv
+
+sd
+s
+dv
+
+sd
+a
+fs
+da
+fs
+df
+s
+df
+sd
+sdc
