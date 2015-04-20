@@ -171,7 +171,7 @@
 							}
 							if ($font_size >= $fmin) {
 								if ($i < 250) {
-									$cloud .= "<a href=\"keyword.php?word=$word\" style=\"font-size: {$font_size}px; color: $color;\">$word</a> ";
+									$cloud .= "<a href=\"word.php?word=$word\" style=\"font-size: {$font_size}px; color: $color;\">$word</a> ";
 									$i++;
 								}
 							}
@@ -207,6 +207,9 @@
 							}
 							// sets actual word
 							$word->setWord($exploded[$j]);
+
+							if (!empty($exploded[$j]))
+								$word->setFrequency($paperArray[$i]->getFrequency($exploded[$j]));
 							// copy authors array from paper to a word
 							if (!empty($paperArray[$i]->authors))
 							{
@@ -234,33 +237,28 @@
 
 				$filtered_complete = filter_stopwords($arrayOfWords, $stopwords);
 				$filtered = filter_stopwords_simple($wordsArray, $stopwords);
-
-
-
 				
 				echo word_cloud($filtered, 600);
 
 				$counted = array_count_values($filtered);
 				
 				
-				/*
-				for ($i = 0; $i < count($filtered_complete); $i++)
-				{
-					foreach($counted as $key=>$value)
-					{	
-							if(strcmp($filtered_complete[$i]->word,$key) == 0)
-							{
-								$filtered_complete[$i]->setFrequency($value);
-							}
-					}
-				}
+				var_dump($filtered_complete);
+				// for ($i = 0; $i < count($filtered_complete); $i++)
+				// {
+				// 	foreach($counted as $key=>$value)
+				// 	{	
+				// 			if(strcmp($filtered_complete[$i]->word,$key) == 0)
+				// 			{
+				// 				$filtered_complete[$i]->setFrequency($value);
+				// 			}
+				// 	}
+				// }
 
-				*/
 
-				
 				$_SESSION['filtered_list_complete'] = $filtered_complete;
 				
-		
+
 			?>
 		 </div>
 
