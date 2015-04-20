@@ -1,7 +1,9 @@
 <?php
+	// includes
+	include 'processor.php';
+
 	//start session
 	session_start();
-	include 'processor.php';
 
 	// if search term parameter is present in URL, else get from cache
 	if (isset($_GET['searchterm'])) {
@@ -187,6 +189,15 @@
 				echo word_cloud($filtered, 600);
 			?>
 		 </div>
+
+		<?php 
+
+			// testing
+			$allPapers = $_SESSION['AllPaperArray'];
+			//var_dump($allPapers);
+
+
+		?>
 
 		<div style="height:50px;">
 			&nbsp;

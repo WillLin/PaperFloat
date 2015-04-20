@@ -8,9 +8,6 @@ require_once 'progressbar.php';
 //start session
 //session_start();
 
-$processesDone = 0;
-$_SESSION['processesDone'] = $processesDone;
-
 
 
  function createFileFromString($stringWithFile){
@@ -261,54 +258,54 @@ function searchIEEEKeyWord($keyword)
 	$limit = $_SESSION['limit'];
 	
 	$paperArray = array();
-	for ($i = 0; $i < 5; $i++)
+	for ($i = 0; $i < $count; $i++)
 	{
-		
-		$html = file_get_contents_curl($arrayOfLinks[$i]);
-		$doc = new DOMDocument();
-		@$doc->loadHTML($html);
-		$metas = $doc->getElementsByTagName('meta');
-		$paper = new Paper();
-		for ($j = 0; $j < $metas->length; $j++)
-		{
-			$meta = $metas->item($j);
-			$pdfLink = ' ';
+		if ($i < $limit) {
+			$html = file_get_contents_curl($arrayOfLinks[$i]);
+			$doc = new DOMDocument();
+			@$doc->loadHTML($html);
+			$metas = $doc->getElementsByTagName('meta');
+			$paper = new Paper();
+			for ($j = 0; $j < $metas->length; $j++)
+			{
+				$meta = $metas->item($j);
+				$pdfLink = ' ';
+				
+
+				if ($meta->getAttribute('name') == "citation_conference")
+				{
+					$paper->setConference($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_author")
+				{
+					$paper->setAuthor($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_title")
+				{
+					$paper->setTitle($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_pdf_url")
+				{	
+					$pdfLink = $meta->getAttribute('content');
+					break;
+				}
+			}
 			
 
-			if ($meta->getAttribute('name') == "citation_conference")
-			{
-				$paper->setConference($meta->getAttribute('content'));
-			}
+			$firstPart = substr($pdfLink, 0, 30);
 
-			if ($meta->getAttribute('name') == "citation_author")
-			{
-				$paper->setAuthor($meta->getAttribute('content'));
-			}
+			$secondPart = substr($pdfLink, 30, strlen($pdfLink));
+			$pdfLink = $firstPart . "x"  . $secondPart;
 
-			if ($meta->getAttribute('name') == "citation_title")
-			{
-				$paper->setTitle($meta->getAttribute('content'));
-			}
+			$paper->setLink($pdfLink);
 
-			if ($meta->getAttribute('name') == "citation_pdf_url")
-			{	
-				$pdfLink = $meta->getAttribute('content');
-				break;
-			}
+			getFileIEEE($pdfLink, $i);
+
+			$paperArray[] = $paper;
 		}
-		
-
-		$firstPart = substr($pdfLink, 0, 30);
-
-		$secondPart = substr($pdfLink, 30, strlen($pdfLink));
-		$pdfLink = $firstPart . "x"  . $secondPart;
-
-		$paper->setLink($pdfLink);
-
-		getFileIEEE($pdfLink, $i);
-
-		$paperArray[] = $paper;
-		
 	}
 
 	return $paperArray;
@@ -389,54 +386,54 @@ function searchIEEEAuthor($author)
 	$limit = $_SESSION['limit'];
 	
 	$paperArray = array();
-	for ($i = 0; $i < 5; $i++)
+	for ($i = 0; $i < $count; $i++)
 	{
-		
-		$html = file_get_contents_curl($arrayOfLinks[$i]);
-		$doc = new DOMDocument();
-		@$doc->loadHTML($html);
-		$metas = $doc->getElementsByTagName('meta');
-		$paper = new Paper();
-		for ($j = 0; $j < $metas->length; $j++)
-		{
-			$meta = $metas->item($j);
-			$pdfLink = ' ';
+		if ($i < $limit) {
+			$html = file_get_contents_curl($arrayOfLinks[$i]);
+			$doc = new DOMDocument();
+			@$doc->loadHTML($html);
+			$metas = $doc->getElementsByTagName('meta');
+			$paper = new Paper();
+			for ($j = 0; $j < $metas->length; $j++)
+			{
+				$meta = $metas->item($j);
+				$pdfLink = ' ';
+				
+
+				if ($meta->getAttribute('name') == "citation_conference")
+				{
+					$paper->setConference($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_author")
+				{
+					$paper->setAuthor($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_title")
+				{
+					$paper->setTitle($meta->getAttribute('content'));
+				}
+
+				if ($meta->getAttribute('name') == "citation_pdf_url")
+				{		
+					$pdfLink = $meta->getAttribute('content');
+					break;
+				}
+			}
 			
 
-			if ($meta->getAttribute('name') == "citation_conference")
-			{
-				$paper->setConference($meta->getAttribute('content'));
-			}
+			$firstPart = substr($pdfLink, 0, 30);
 
-			if ($meta->getAttribute('name') == "citation_author")
-			{
-				$paper->setAuthor($meta->getAttribute('content'));
-			}
+			$secondPart = substr($pdfLink, 30, strlen($pdfLink));
+			$pdfLink = $firstPart . "x"  . $secondPart;
 
-			if ($meta->getAttribute('name') == "citation_title")
-			{
-				$paper->setTitle($meta->getAttribute('content'));
-			}
+			$paper->setLink($pdfLink);
 
-			if ($meta->getAttribute('name') == "citation_pdf_url")
-			{		
-				$pdfLink = $meta->getAttribute('content');
-				break;
-			}
-		}
-		
+			getFileIEEE($pdfLink, $i);
 
-		$firstPart = substr($pdfLink, 0, 30);
-
-		$secondPart = substr($pdfLink, 30, strlen($pdfLink));
-		$pdfLink = $firstPart . "x"  . $secondPart;
-
-		$paper->setLink($pdfLink);
-
-		getFileIEEE($pdfLink, $i);
-
-		$paperArray[] = $paper;
-		
+			$paperArray[] = $paper;
+		}	
 	}
 
 	return $paperArray;
@@ -621,6 +618,9 @@ function parseACM($paperArray)
 
 
 function startProcessor() {
+
+	$processesDone = 0;
+	$_SESSION['processesDone'] = $processesDone;
 
 	// setup and display progress bar
 	$p = new ProgressBar();
