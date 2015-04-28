@@ -4,40 +4,6 @@ include('paper.php');
 include 'paper_word.php';
 session_start();
 
-/*
-function countFreq($word)
-{
-
-	$songs = array();
-	$songs = $_SESSION['songsArray'];
-
-	$data_array = array();
-
-
-
-
-	$lists=new Songlist($word);
-	$lists->setList($songs);
-	$songlist=$lists->getFrequencyList();
-	$artistList = $lists->getArtistMap();
-	foreach ($songlist as $songName => $frequency) {
-		$artistName = $artistList[$songName];
-		$formattedArtistName = str_replace(' ', '+', $artistName);
-		$formattedSongName = str_replace(' ', '+', $songName);
-		$url = "songlyrics.php?artist=";
-		$url .= $formattedArtistName;
-		$url .= "&amp;word=";
-		$url .= $word;
-		$url .= "&amp;song=";
-		$url .= $formattedSongName;
-		echo "<p><a href=\"$url\" style=\"color:white;\">";
-		echo $songName . " ................................ "  . $frequency  . ' ';
-		echo '</a></p>';
-	}
-}
-
-*/
-
 function printTable() {
 
 	$keyword = $_GET['word'];
@@ -89,18 +55,28 @@ function printTable() {
 
 	foreach ($allPapers as $key => $paper) {
 		if (strcmp($paper->getWord(), $keyword) == 0) {
+			$frequency = $paper->getFrequency();
 			$title = $paper->getTitle();
 			$conference = $paper->getConference();
 			$link = $paper->getLink();
-			echo "<tr><td><input type='checkbox'></td><td>$title</td><td>";
-			foreach ($paper->getAuthors() as $key => $value) {
-				echo $value . ' ';
+
+			// separate words in title to create separate links
+			$arrayOfTitleWords = array();
+			$title = preg_replace("/[^a-zA-Z0-9\-]+/", " ", $title);
+			$arrayOfTitleWords = explode(' ', $title);
+
+			// print a row with paper's info
+			echo "<tr><td><input type=\"checkbox\"></td><td>$frequency</td><td>";
+			foreach ($arrayOfTitleWords as $key => $value) {
+				echo "<a href=\"wordcloud.php?searchterm=$value&parameter=keyword\">$value</a>" . ' ';
 			}
-			echo "</td><td>$conference</td><td><a href='$link'>PDF</a></td></tr>";
+			echo "</td><td>";
+			foreach ($paper->getAuthors() as $key => $value) {
+				echo "<a href=\"wordcloud.php?searchterm=$value&parameter=author\">$value</a>" . ' / ';
+			}
+			echo "</td><td>$conference</td><td><a href=\"$link\">PDF</a></td></tr>";
 		}
 	}
-	// foreach
-	//echo "<tr><td>&nbsp;</td><td>Title</td><td>Author</td><td>Conference</td><td>Link</td></tr>"
 }
 
 
@@ -124,6 +100,7 @@ function printTable() {
 				<table>
 					<tr>
 						<th>&nbsp;</th>
+						<th>Freq.</th>
 						<th>Title</th> 
 						<th>Author</th>
 						<th>Conference</th>

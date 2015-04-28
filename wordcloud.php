@@ -136,8 +136,8 @@
 		    return  $launch;
 				}
 				
-				function word_cloud($words, $div_size = 600) {
-					$cloud = "<div style=\"width: {$div_size}px\">";
+				function word_cloud($words) {
+					$cloud = "<div>";
 					$fmax = 160; /* Maximum font size */
 					$fmin = 8; /* Minimum font size */
 					$counted = array_count_values($words);
@@ -238,7 +238,7 @@
 				$filtered_complete = filter_stopwords($arrayOfWords, $stopwords);
 				$filtered = filter_stopwords_simple($wordsArray, $stopwords);
 				
-				echo word_cloud($filtered, 600);
+				echo word_cloud($filtered);
 
 				$counted = array_count_values($filtered);
 				
