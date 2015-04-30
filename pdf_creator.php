@@ -114,15 +114,27 @@ function SetCol($col)
 
 }
 
+$paperWithKeyword = $_SESSION['papersWithKeyword'];
+$pdfArray = array();
+for ($i = 0; $i < count($paperWithKeyword); $i++)
+{
+	$pdfArray[] = $paperWithKeyword[$i]->getTitle();
+	$authors = "";
+	foreach ($paper->getAuthors() as $key => $value)
+	{
+		$authors .= $value . " ";
+	}
+	$pdfArray[] = $authors;
+	$pdfArray[] = $paperWithKeyword[$i]->getConference();
+}
+
 $pdf = new PDF();
 
-$data2 = array("A Robot that Approaches Pedestrians", "Satake, Satoru / Kanda, Takefumi / Glas, Dylan F. / Imai, Masayoshi / Ishiguro, Hiroshi / Hagita, Norihiro /", "", "The Effect of Robot Appearance Types and Task Types on Service Evaluation of a Robot", "aoaernoierfneorifjweopfjwepfaawefwefewfewfewfed", "Sean", "Jack", "Bill", "HRI'15 Extended Abstracts: Proceedings of the Tenth Annual ACM/IEEE International Conference on Human-Robot Interaction Extended Abstracts");
 $header = array('Title', 'Author', 'Conference');
 $pdf->SetFont('Arial', '', 8);
 $pdf->AddPage();
-$pdf->BasicTable($header, $data2);
+$pdf->BasicTable($header, $pdfArray);
 $pdf->Output();
-
 
 
 
