@@ -122,8 +122,17 @@ function parseIEEE($papers)
 
 		else
 		{
-			$text = parsePDF($string);
-			$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
+			// !!!! CATCH PARSE EXCEPTION HERE
+			try {
+				$text = parsePDF($string);
+				$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
+			}
+			catch (Exception $e) {
+				//echo "There was a problem reading a paper from IEEE. The file returned is invalid. Skipping...<br />";
+				$text = ' ';
+				displayError('There was a problem reading a paper from IEEE. The file returned is invalid. Skipping...');
+			}
+			//$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
 			$arrayOfPaperText[$i] = $text;
 			$papers[$i]->setText($text);
 		}
@@ -586,8 +595,16 @@ function parseACM($paperArray)
 
 		else
 		{
-			$text = parsePDF($string);
-			$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
+			try {
+				$text = parsePDF($string);
+				$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
+			}
+			catch (Exception $e) {
+				//echo "There was a problem reading a paper from ACM. The file returned is invalid. Skipping...<br />";
+				$text = ' ';
+				displayError('There was a problem reading a paper from ACM. The file returned is invalid. Skipping...');
+			}
+			//$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
 			$paperArray[$i]->setText($text);
 			$arrayOfPaperText[$i] = $text;
 		}
@@ -615,6 +632,12 @@ function parseACM($paperArray)
 
 
 /* End of ACM Functions */
+
+
+
+function displayError($message) {
+	echo '<script>$( "#errorbox" ).show(); $( "#errorbox" ).append("' . $message . '<br />");</script>';
+}
 
 
 function startProcessor() {

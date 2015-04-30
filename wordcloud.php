@@ -64,6 +64,14 @@
 			<a href="./"><img src="images/paperfloat_sm.png" alt="PaperFloat" /></a>
 		</div>
 
+		<div id="errorbox" style="padding: 20px; background-color: salmon; width: 50%; margin: auto; margin-top: 20px; margin-bottom: 20px;">
+			Error:
+			<br />
+		</div>
+		<script>
+			$( "#errorbox" ).hide();
+		</script>
+
 		<div id="progressbar" style="padding-top: 50px;">
 			<?php 
 
