@@ -2,6 +2,7 @@
 	// includes
 	include 'processor.php';
 	include 'paper_word.php';
+	include 'subsetsearch.php';
 	//start session
 	session_start();
 
@@ -75,6 +76,9 @@
 		<div id="progressbar" style="padding-top: 50px;">
 			<?php 
 
+				
+
+
 				if ($term != $_SESSION['searchTerm'] || $limit != $_SESSION['limit'] || $searchParameter!= $_SESSION['searchParameter']) {
 
 					$_SESSION['searchTerm'] = $term;
@@ -88,6 +92,12 @@
 
 					startProcessor();
 				}
+				else if (isset($_GET['subset'])) {
+					if (strcmp($_GET['subset'], "true") == 0) {
+						subsetSearch();
+					}
+				}
+				
 
 			?>
 		</div>
@@ -195,7 +205,18 @@
 
 				$wordsArray = array();
 
-				$paperArray = $_SESSION['AllPaperArray'];
+				if (isset($_GET['subset'])) {
+					if (strcmp($_GET['subset'], "true") == 0) {
+						$paperArray = $_SESSION['subsetPapersArray'];
+						echo 'Subset cloud';
+					}
+					else {
+						$paperArray = $_SESSION['AllPaperArray'];
+					}
+				}
+				else {
+					$paperArray = $_SESSION['AllPaperArray'];
+				}
 
 				$arrayOfWords = array();
 				for ($i = 0; $i < count($paperArray); $i++)
