@@ -109,11 +109,11 @@ function getOtherLinks ($link)
 
 function parseIEEE($papers)
 {			
+	$arrayOfPaperText = array();
 	for ($i = 0; $i < count($papers); $i++)
 	{
 		$string = "Downloads/" . $i . "file.pdf";
 
-		$arrayOfPaperText = array();
 		if (filesize($string) <= 64886)
 		{	
 			$arrayOfPaperText[$i] = ' ';
@@ -122,17 +122,14 @@ function parseIEEE($papers)
 
 		else
 		{
-			// !!!! CATCH PARSE EXCEPTION HERE
 			try {
 				$text = parsePDF($string);
 				$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
 			}
 			catch (Exception $e) {
-				//echo "There was a problem reading a paper from IEEE. The file returned is invalid. Skipping...<br />";
 				$text = ' ';
 				displayError('There was a problem reading a paper from IEEE. The file returned is invalid. Skipping...');
 			}
-			//$text = preg_replace("/[^a-zA-Z0-9]+/", " ", $text);
 			$arrayOfPaperText[$i] = $text;
 			$papers[$i]->setText($text);
 		}
