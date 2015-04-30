@@ -1,6 +1,11 @@
 <?php
 
 require('fpdf17/fpdf.php');
+
+require_once 'paper.php';
+require_once 'paper_word.php';
+
+session_start();
 class PDF extends FPDF
 {
 // Load data
@@ -120,7 +125,7 @@ for ($i = 0; $i < count($paperWithKeyword); $i++)
 {
 	$pdfArray[] = $paperWithKeyword[$i]->getTitle();
 	$authors = "";
-	foreach ($paper->getAuthors() as $key => $value)
+	foreach ($paperWithKeyword[$i]->getAuthors() as $key => $value)
 	{
 		$authors .= $value . " ";
 	}

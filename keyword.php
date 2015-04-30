@@ -135,6 +135,10 @@ function printTable() {
 				&nbsp;
 			</div>
 
+			<form action="pdf_creator.php" method="get">
+				<input id="pdfbutton" class="purplebutton" type="submit" value="Export list as PDF">
+			</form>
+
 			<form action="wordcloud.php" method="get">
 				<input id="backbutton" class="purplebutton" type="submit" value="Back to cloud">
 			</form>
