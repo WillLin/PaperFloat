@@ -11,35 +11,6 @@ function printTable() {
 	$allPapers = array();
 	$allPapers = $_SESSION['filtered_list_complete'];
 
-	//var_dump($allPapers);
-
-
-	//$alreadyAdded = array();
-	//$alreadyAddedCount = 0;
-
-	/*
-	foreach ($allPapers as $paper => $what) {
-		if (strtolower($what->getWord()) == strtolower($keyword)) {
-			$match = FALSE;
-			foreach ($alreadyAdded as $paper2 => $i) {
-			 	if ($what->getTitle() == $i->getTitle()) {
-			 		//$match = TRUE;
-			 	}
-
-			 	if ($match == FALSE) {
-			 		$alreadyAdded[$alreadyAddedCount] = $what;
-			 		$alreadyAddedCount++;
-			 		echo 'adding';
-			 	}
-			}
-		}
-	}
-	
-	foreach ($alreadyAdded as $key => $value) {
-		echo $value->getTitle();
-	}
-	*/
-
 	function cmp($a, $b) {
 		if ($a->getFrequency() == $b->getFrequency()) {
 	        return 0;
@@ -47,9 +18,6 @@ function printTable() {
 	    return ($a->getFrequency() > $b->getFrequency()) ? -1 : 1;
 	}
 
-
-
-	//$allPapers = array_unique($allPapers, SORT_REGULAR);
 	uasort($allPapers, 'cmp');
 	$allPapers = array_unique($allPapers, SORT_REGULAR);
 
@@ -115,7 +83,7 @@ function printTable() {
 							<th>Freq.</th>
 							<th>Title</th> 
 							<th>Author</th>
-							<th>Conference/Publication</th>
+							<th>Publication/Conference</th>
 							<th>Link</th>
 						</tr>
 						<?php 
@@ -135,7 +103,7 @@ function printTable() {
 				&nbsp;
 			</div>
 
-			<form action="pdf_creator.php" method="get">
+			<form action="pdf_creator.php" method="get" target="_blank">
 				<input id="pdfbutton" class="purplebutton" type="submit" value="Export list as PDF">
 			</form>
 
