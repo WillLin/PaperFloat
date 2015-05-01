@@ -268,6 +268,59 @@ function searchIEEE($searchTerm, $searchParameter) {
 
 }
 
+function searchIEEEByPublication($searchTerm) {
+
+	$searchTerm = strtolower($searchTerm);
+	$searchTerm = preg_replace("/[\s_]/", "_", $searchTerm);
+
+	$query = "http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?jn=" . $searchTerm;
+
+	$xml = simplexml_load_file($query);
+	$count = count($xml->document);
+	$arrayOfLinks = array();
+	for ($i = 0; $i < $count; $i++)	{
+		$arrayOfLinks[$i] = (string)$xml->document[$i]->mdurl;
+	}
+
+	
+	$paperArray = array();
+	for ($i = 0; $i < $count; $i++) {
+
+		$html = file_get_contents_curl($arrayOfLinks[$i]);
+		$doc = new DOMDocument();
+		@$doc->loadHTML($html);
+		$metas = $doc->getElementsByTagName('meta');
+		$paper = new Paper();
+		for ($j = 0; $j < $metas->length; $j++) {
+			$meta = $metas->item($j);
+			$pdfLink = ' ';
+
+			if ($meta->getAttribute('name') == "citation_conference") {
+				$paper->setConference($meta->getAttribute('content'));
+			}
+
+			if ($meta->getAttribute('name') == "citation_author") {
+				$paper->setAuthor($meta->getAttribute('content'));
+			}
+
+			if ($meta->getAttribute('name') == "citation_title") {
+				$paper->setTitle($meta->getAttribute('content'));
+			}
+
+			if ($meta->getAttribute('name') == "citation_pdf_url"){		
+				$pdfLink = $meta->getAttribute('content');
+				break;
+			}
+		}
+
+		$paperArray[] = $paper;
+
+	}
+
+	return $paperArray;
+
+}
+
 function file_get_contents_curl($url)
 {
     $ch = curl_init();

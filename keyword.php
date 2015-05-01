@@ -48,7 +48,7 @@ function printTable() {
 			foreach ($paper->getAuthors() as $key => $value) {
 				echo "<a href=\"wordcloud.php?searchterm=$value&parameter=author\">$value</a>" . ' / ';
 			}
-			echo "</td><td><a href=\"wordcloud.php?searchterm=$conference&parameter=publication\">$conference</a></td>";
+			echo "</td><td><a href=\"publication.php?searchterm=$conference&from=$keyword\">$conference</a></td>";
 			echo "<td><a href=\"$link\" target=\"_blank\">PDF</a></td></tr>";
 
 			$rowID++;
