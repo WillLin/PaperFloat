@@ -317,7 +317,7 @@
 				<input type="radio" name="parameter" value="author">Author 
 				<br />
 				<br />
-				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles per source
+				Limit search to <input id="searchlimit" type="number" name="limit" value="5"> articles per source
 				<br />
 				<div class="floatright">
 					<!-- <div class="fb-share-button sharebutton" data-layout="button"></div> -->

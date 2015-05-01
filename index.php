@@ -38,7 +38,7 @@
 				<input type="radio" id="radio_author" name="parameter" value="author">Author 
 				<br />
 				<br />
-				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles per source
+				Limit search to <input id="searchlimit" type="number" name="limit" value="5"> articles per source
 				<br />
 				<div class="floatright">
 					<input id="submitbutton" class="purplebutton marginleft10" type="submit" value="Submit" onclick="doSomething();">
