@@ -77,25 +77,29 @@
 			<?php 
 
 				
+				try {
 
+					if ($term != $_SESSION['searchTerm'] || $limit != $_SESSION['limit'] || $searchParameter!= $_SESSION['searchParameter']) {
 
-				if ($term != $_SESSION['searchTerm'] || $limit != $_SESSION['limit'] || $searchParameter!= $_SESSION['searchParameter']) {
+						$_SESSION['searchTerm'] = $term;
+						
+						$_SESSION['limit'] = $limit;
 
-					$_SESSION['searchTerm'] = $term;
-					
-					$_SESSION['limit'] = $limit;
+						$_SESSION['searchParameter'] = $searchParameter;
 
-					$_SESSION['searchParameter'] = $searchParameter;
+						$totalProcesses = $limit*4; // total processes=(paper limit*2)*2  //two papers each source(2), with two processes each paper (download and parse)
+						$_SESSION['totalProcesses'] = $totalProcesses;
 
-					$totalProcesses = $limit*4; // total processes=(paper limit*2)*2  //two papers each source(2), with two processes each paper (download and parse)
-					$_SESSION['totalProcesses'] = $totalProcesses;
-
-					startProcessor();
-				}
-				else if (isset($_GET['subset'])) {
-					if (strcmp($_GET['subset'], "true") == 0) {
-						subsetSearch();
+						startProcessor();
 					}
+					else if (isset($_GET['subset'])) {
+						if (strcmp($_GET['subset'], "true") == 0) {
+							subsetSearch();
+						}
+					}
+				}
+				catch (Exception $e) {
+
 				}
 				
 
@@ -313,7 +317,7 @@
 				<input type="radio" name="parameter" value="author">Author 
 				<br />
 				<br />
-				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles
+				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles per source
 				<br />
 				<div class="floatright">
 					<!-- <div class="fb-share-button sharebutton" data-layout="button"></div> -->
