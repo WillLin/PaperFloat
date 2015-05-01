@@ -34,8 +34,8 @@
 				<input id="searchterm" class="ui-widget" type="text" name="searchterm" placeholder="Enter search term" size="35" >
 				<br />
 				Search by
-				<input type="radio" name="parameter" value="keyword" checked>Keyword(s) 
-				<input type="radio" name="parameter" value="author">Author 
+				<input type="radio" id="radio_keyword" name="parameter" value="keyword" checked>Keyword(s) 
+				<input type="radio" id="radio_author" name="parameter" value="author">Author 
 				<br />
 				<br />
 				Limit search to <input id="searchlimit" type="number" name="limit" value="10"> articles per source
