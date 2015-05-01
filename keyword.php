@@ -40,7 +40,7 @@ function printTable() {
 			$arrayOfTitleWords = explode(' ', $title);
 
 			// print a row with paper's info
-			echo "<tr><td><input type=\"checkbox\" name=\"paper[]\" value=\"$rowID\"></td><td>$frequency</td><td>";
+			echo "<tr><td><input type=\"checkbox\" id=\"row$rowID\" name=\"paper[]\" value=\"$rowID\"></td><td>$frequency</td><td>";
 			foreach ($arrayOfTitleWords as $key => $value) {
 				echo "<a href=\"wordcloud.php?searchterm=$value&parameter=keyword\">$value</a>" . ' ';
 			}
