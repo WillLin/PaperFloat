@@ -5,7 +5,7 @@ Scenario:
 	Given I am on the PaperFloat page
 	And I have entered a valid key word, chain, in the input box
 	And I have chosen a valid limit, 2, in the limit box
-	When I press the ‘Submit’ button
+	When I click the Submit button
 	Then I should get a word cloud, with the word chain
 	Then I should click on 'chain' in the word cloud
 	Then I should click on the 'Export list as PDF' button
