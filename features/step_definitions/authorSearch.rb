@@ -8,7 +8,7 @@ Given(/^I have entered a valid author, Norihiro Yoshida, in the input box$/) do
 end
 
 Given(/^I choose Author$/) do
-	choose('Author')
+	choose('radio_author')
 end
 
 When(/^I press the Submit button$/) do
